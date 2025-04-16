@@ -1,0 +1,13 @@
+body {
+    font-family: sans-serif;
+    padding: 20px;
+    background: #fdce97;
+}
+
+form,
+#output {
+    margin-top: 20px;
+    background: #c57206;
+    padding: 15px;
+    border-radius: 10px;
+}
