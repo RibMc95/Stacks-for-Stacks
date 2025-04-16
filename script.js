@@ -13,11 +13,18 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
   const pancakeCount = parseInt(document.getElementById("pancakeCount").value);
+  const flavors = Array.from(document.getElementsByClassName("pancakeFlavor")).map(input => input.value);
   const drinkType = document.getElementById("drinkType").value;
   const drinkAmount = parseInt(document.getElementById("drinkAmount").value);
-  const flavors = Array.from(document.getElementsByClassName("pancakeFlavor")).map(input => input.value);
-
+  const maxDrinkOZ = 64;
+  const minDrinkOZ = 8;
   const drink = [];
+
+  if (drinkAmount < minDrinkOZ || drinkAmount > maxDrinkOZ) {
+    alert(`Whoa there! You can't order less than ${minDrinkOZ} or more than ${maxDrinkOZ} ounces of ${drinkType}`);
+    return;
+  }
+  
   for (let i = 0; i < drinkAmount; i++) {
     drink.push(1); // 1 oz per pour
   }
