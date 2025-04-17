@@ -1,3 +1,20 @@
+// Random topping options
+const toppingsList = [
+  "chocolate chips",
+  "blueberries",
+  "bananas",
+  "whipped cream",
+  "maple syrup",
+  "peanut butter",
+];
+
+// Generate a random topping
+function getRandomTopping() {
+  const index = Math.floor(Math.random() * toppingsList.length);
+  return toppingsList[index];
+}
+
+// Dynamically generate pancake flavor inputs
 document.getElementById("pancakeCount").addEventListener("change", () => {
   const count = parseInt(document.getElementById("pancakeCount").value);
   const flavorInputs = document.getElementById("flavorInputs");
@@ -9,11 +26,14 @@ document.getElementById("pancakeCount").addEventListener("change", () => {
   }
 });
 
+// Handle form submission
 document.getElementById("orderForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
   const pancakeCount = parseInt(document.getElementById("pancakeCount").value);
-  const flavors = Array.from(document.getElementsByClassName("pancakeFlavor")).map(input => input.value);
+  const flavors = Array.from(
+    document.getElementsByClassName("pancakeFlavor")
+  ).map((input) => input.value);
   const drinkType = document.getElementById("drinkType").value;
   const drinkAmount = parseInt(document.getElementById("drinkAmount").value);
   const maxDrinkOZ = 64;
@@ -21,21 +41,60 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
   const drink = [];
 
   if (drinkAmount < minDrinkOZ || drinkAmount > maxDrinkOZ) {
-    alert(`Whoa there! You can't order less than ${minDrinkOZ} or more than ${maxDrinkOZ} ounces of ${drinkType}`);
+    alert(
+      `Whoa there! You can't order less than ${minDrinkOZ} or more than ${maxDrinkOZ} ounces of ${drinkType}`
+    );
     return;
   }
-  
+
   for (let i = 0; i < drinkAmount; i++) {
     drink.push(1); // 1 oz per pour
   }
 
+  // Update drink progress bar
+  const progressBar = document.getElementById("drinkProgress");
+  progressBar.max = maxDrinkOZ;
+  progressBar.value = Math.min(drink.length, progressBar.max);
+
+  // Build output
   let output = `<h2> Order Summary:</h2>`;
   output += `<p>- ${drink.length} oz of ${drinkType}</p>`;
   output += `<p>- ${flavors.length} pancake(s):</p><ul>`;
   for (let i = flavors.length - 1; i >= 0; i--) {
-    output += `<li>${flavors[i]} pancake</li>`;
+    const topping = getRandomTopping();
+    output += `<li>${flavors[i]} pancake with ${topping}</li>`;
   }
   output += "</ul>";
 
+  // Save order to localStorage
+  const order = {
+    pancakes: flavors,
+    drink: drinkType,
+    amount: drink.length,
+    timestamp: new Date().toLocaleString(),
+  };
+
+  let history = JSON.parse(localStorage.getItem("orders")) || [];
+  history.push(order);
+  localStorage.setItem("orders", JSON.stringify(history));
+
   document.getElementById("output").innerHTML = output;
+  function showOrderHistory() {
+    const history = JSON.parse(localStorage.getItem("orders")) || [];
+    if (history.length === 0) {
+      document.getElementById("output").innerHTML =
+        "<p>No previous orders found.</p>";
+      return;
+    }
+
+    let html = "<h2>🕓 Previous Orders</h2>";
+    history.forEach((order, i) => {
+      html += `<p><strong>Order #${i + 1}</strong> (${order.timestamp})<br>
+    Drink: ${order.amount} oz of ${order.drink}<br>
+    Pancakes: ${order.pancakes.join(", ")}</p>`;
+    });
+
+    document.getElementById("output").innerHTML = html;
+  }
+
 });
