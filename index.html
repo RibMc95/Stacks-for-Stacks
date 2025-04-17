@@ -27,7 +27,11 @@
         <button type="submit">Place Order</button>
     </form>
 
+    <progress id="drinkProgress" value="0" max="20" style="width: 100%; height: 20px;"></progress>
+    <button onclick="localStorage.clear(); location.reload();">Reset Site</button>
+
     <div id="output"></div>
+    <button onclick="showOrderHistory()">View Previous Orders</button> // buttons 
 
     
     <div id="sampleImages" style="margin-top: 20px;">
