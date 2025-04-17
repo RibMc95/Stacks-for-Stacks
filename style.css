@@ -1,19 +1,14 @@
-h1 {
-    text-align: center;
-    color: #542e0f;
+body {
+  font-family: sans-serif;
+  padding: 20px;
+  background: #fdce97; /* warm pancake beige */
 }
 
-button {
-    background-color: #e3b656;
-    color: #542e0f;
-    font-weight: bold;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-top: 10px;
+form,
+#output {
+  margin-top: 20px;
+  background: #c57206;
+  padding: 15px;
+  border-radius: 10px;
 }
 
-button:hover {
-    background-color: #e3b656;
-}
