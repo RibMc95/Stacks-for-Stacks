@@ -46,6 +46,9 @@ document.getElementById("pancakeCount").addEventListener("change", () => {
 document.getElementById("orderForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
+  const customerName = escapeHTML(
+    document.getElementById("customerName").value.trim()
+  );
   const pancakeCount = parseInt(document.getElementById("pancakeCount").value);
   const flavors = Array.from(
     document.getElementsByClassName("pancakeFlavor")
@@ -78,15 +81,18 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
 
   // Build summary
   let output = `<h2>Order Summary:</h2>`;
+  output += `<p><strong>Name:</strong> ${customerName}</p>`;
   output += `<p>- ${drink.length} oz of ${drinkType}</p>`;
   output += `<p>- ${flavors.length} pancake(s):</p><ul>`;
   for (let i = flavors.length - 1; i >= 0; i--) {
-    output += `<li>${flavors[i]} pancake with ${toppings[i]}</li>`;
+    const imageName = toppings[i].toLowerCase().replace(/ /g, "-");
+    output += `<li>${flavors[i]} pancake with ${toppings[i]} <img src="images/${imageName}.png" alt="${toppings[i]}" width="40" style="vertical-align:middle;"></li>`;
   }
   output += "</ul>";
 
   // Save order to localStorage
   const order = {
+    name: customerName,
     pancakes: flavors,
     toppings: toppings,
     drink: drinkType,
@@ -117,7 +123,9 @@ function showOrderHistory() {
     const toppingText = order.toppings
       ? ` with toppings: ${order.toppings.join(", ")}`
       : "";
-    html += `<p><strong>Order #${i + 1}</strong> (${order.timestamp})<br>
+    html += `<p><strong>Order #${i + 1}</strong> by ${order.name} (${
+      order.timestamp
+    })<br>
     Drink: ${order.amount} oz of ${order.drink}<br>
     Pancakes: ${order.pancakes.join(", ")}${toppingText}</p>`;
   });
@@ -172,6 +180,34 @@ function showStatistics() {
     <p><strong>Most Popular Topping:</strong> ${mostPopularTopping}</p>
     <p><strong>Most Ordered Drink:</strong> ${mostPopularDrink}</p>
     <p><strong>Total Ounces Poured:</strong> ${totalOunces} oz</p>`;
+
+  document.getElementById("output").innerHTML = html;
+}
+
+// Show orders by name
+function showOrdersByName() {
+  const name = prompt("Enter your name to view your orders:").trim();
+  const history = JSON.parse(localStorage.getItem("orders")) || [];
+
+  const filtered = history.filter(
+    (order) => order.name.toLowerCase() === name.toLowerCase()
+  );
+
+  if (filtered.length === 0) {
+    document.getElementById(
+      "output"
+    ).innerHTML = `<p>No orders found for "${name}".</p>`;
+    return;
+  }
+
+  let html = `<h2>🧾 Orders by ${escapeHTML(name)}</h2>`;
+  filtered.forEach((order, i) => {
+    html += `<p><strong>Order #${i + 1}</strong> (${order.timestamp})<br>
+    Drink: ${order.amount} oz of ${order.drink}<br>
+    Pancakes: ${order.pancakes.join(", ")} with ${order.toppings.join(
+      ", "
+    )}</p>`;
+  });
 
   document.getElementById("output").innerHTML = html;
 }
