@@ -98,11 +98,12 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
   history.push(order);
   localStorage.setItem("orders", JSON.stringify(history));
 
-  // Play sound effect
+  // Show output + play sound
   document.getElementById("output").innerHTML = output;
   document.getElementById("orderSound").play();
 });
 
+// Show previous orders
 function showOrderHistory() {
   const history = JSON.parse(localStorage.getItem("orders")) || [];
   if (history.length === 0) {
@@ -120,6 +121,57 @@ function showOrderHistory() {
     Drink: ${order.amount} oz of ${order.drink}<br>
     Pancakes: ${order.pancakes.join(", ")}${toppingText}</p>`;
   });
+
+  document.getElementById("output").innerHTML = html;
+}
+
+// Show statistics
+function showStatistics() {
+  const history = JSON.parse(localStorage.getItem("orders")) || [];
+
+  if (history.length === 0) {
+    document.getElementById("output").innerHTML =
+      "<p>No stats available yet.</p>";
+    return;
+  }
+
+  const pancakeCounts = {};
+  const toppingCounts = {};
+  const drinkCounts = {};
+  let totalOunces = 0;
+
+  history.forEach((order) => {
+    totalOunces += order.amount;
+
+    order.pancakes.forEach((flavor) => {
+      pancakeCounts[flavor] = (pancakeCounts[flavor] || 0) + 1;
+    });
+
+    if (order.toppings) {
+      order.toppings.forEach((topping) => {
+        toppingCounts[topping] = (toppingCounts[topping] || 0) + 1;
+      });
+    }
+
+    drinkCounts[order.drink] = (drinkCounts[order.drink] || 0) + 1;
+  });
+
+  function getMostCommon(obj) {
+    return Object.entries(obj).reduce(
+      (a, b) => (b[1] > a[1] ? b : a),
+      ["None", 0]
+    )[0];
+  }
+
+  const mostPopularFlavor = getMostCommon(pancakeCounts);
+  const mostPopularTopping = getMostCommon(toppingCounts);
+  const mostPopularDrink = getMostCommon(drinkCounts);
+
+  let html = `<h2>📊 Order Statistics</h2>
+    <p><strong>Most Popular Pancake Flavor:</strong> ${mostPopularFlavor}</p>
+    <p><strong>Most Popular Topping:</strong> ${mostPopularTopping}</p>
+    <p><strong>Most Ordered Drink:</strong> ${mostPopularDrink}</p>
+    <p><strong>Total Ounces Poured:</strong> ${totalOunces} oz</p>`;
 
   document.getElementById("output").innerHTML = html;
 }
