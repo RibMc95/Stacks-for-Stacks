@@ -1,14 +1,20 @@
 body {
-  font-family: sans-serif;
-  padding: 20px;
-  background: #fdce97; /* warm pancake beige */
+    font-family: sans-serif;
+    padding: 20px;
+    background: #fdce97;
+    /* warm pancake beige */
 }
 
 form,
 #output {
-  margin-top: 20px;
-  background: #c57206;
-  padding: 15px;
-  border-radius: 10px;
+    margin-top: 20px;
+    background: #c57206;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#output img {
+    border-radius: 6px;
+    margin-left: 8px;
 }
 
