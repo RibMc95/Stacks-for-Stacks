@@ -269,7 +269,7 @@ musicToggleBtn.addEventListener("click", () => {
 const volumeSlider = document.getElementById("volumeSlider");
 const volumeValue = document.getElementById("volumeValue");
 
-// Load saved volume or default to 1 (100%)
+// Load saved volume or default to 1 (15%)
 const savedVolume = localStorage.getItem("musicVolume");
 music.volume = savedVolume !== null ? parseFloat(savedVolume) : 1;
 volumeSlider.value = Math.round(music.volume * 15);
