@@ -272,7 +272,7 @@ const volumeValue = document.getElementById("volumeValue");
 // Load saved volume or default to 1 (100%)
 const savedVolume = localStorage.getItem("musicVolume");
 music.volume = savedVolume !== null ? parseFloat(savedVolume) : 1;
-volumeSlider.value = Math.round(music.volume * 100);
+volumeSlider.value = Math.round(music.volume * 15);
 volumeValue.textContent = volumeSlider.value + "%";
 
 // Handle volume changes
