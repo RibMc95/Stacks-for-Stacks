@@ -152,7 +152,8 @@ function showStatistics() {
     totalOunces += order.amount;
 
     order.pancakes.forEach((flavor) => {
-      pancakeCounts[flavor] = (pancakeCounts[flavor] || 0) + 1;
+      const normal = flavor.toLowerCase();
+      pancakeCounts[normal] = (pancakeCounts[normal] || 0) + 1;
     });
 
     if (order.toppings) {
@@ -219,4 +220,66 @@ function resetOrders() {
     location.reload();
   }
 }
+
+// 🌗 Theme toggle
+const themeToggleBtn = document.getElementById("themeToggle");
+
+function applyTheme(theme) {
+  document.body.classList.toggle("dark", theme === "dark");
+  localStorage.setItem("theme", theme);
+  themeToggleBtn.textContent = theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+}
+
+// Load theme from storage on startup
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);
+
+// Toggle theme on button click
+themeToggleBtn.addEventListener("click", () => {
+  const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
+  applyTheme(newTheme);
+});
+
+// 🎶 Theme music toggle
+const music = document.getElementById("themeMusic");
+const musicToggleBtn = document.getElementById("musicToggle");
+
+// Try to auto-play after interaction
+let musicStarted = false;
+function tryStartMusic() {
+  if (!musicStarted) {
+    music.play().catch(() => {});
+    musicStarted = true;
+  }
+}
+document.body.addEventListener("click", tryStartMusic, { once: true });
+
+// Handle toggle button
+musicToggleBtn.addEventListener("click", () => {
+  if (music.paused) {
+    music.play();
+    musicToggleBtn.textContent = "🔊 Music On";
+  } else {
+    music.pause();
+    musicToggleBtn.textContent = "🔇 Music Off";
+  }
+});
+
+//  Volume slider logic
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeValue = document.getElementById("volumeValue");
+
+// Load saved volume or default to 1 (100%)
+const savedVolume = localStorage.getItem("musicVolume");
+music.volume = savedVolume !== null ? parseFloat(savedVolume) : 1;
+volumeSlider.value = Math.round(music.volume * 100);
+volumeValue.textContent = volumeSlider.value + "%";
+
+// Handle volume changes
+volumeSlider.addEventListener("input", () => {
+  const volume = volumeSlider.value / 100;
+  music.volume = volume;
+  volumeValue.textContent = volumeSlider.value + "%";
+  localStorage.setItem("musicVolume", volume);
+});
 
