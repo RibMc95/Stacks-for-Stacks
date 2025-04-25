@@ -8,17 +8,31 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 
+<!-- 🤖 Chatbot Waiter -->
+<div id="chatbot">
+    <div id="chatHeader">🧑‍🍳 Chatbot Waiter</div>
+    <div id="chatMessages"></div>
+    <input type="text" id="chatInput" placeholder="Ask me anything..." />
+</div>
+
 
 <body>
     <!-- 🖼️ Logo -->
     <img src="images/Logo.jpg" alt="Logo" width="300" style="margin-right: 20px;">
     <button id="themeToggle">Toggle Light/Dark Mode</button>
     <h1>🥞 Welcome to Stacks For Stacks 🥤</h1>
+    <div id="dailySpecial" style="margin-top: 10px; font-size: 16px; font-weight: bold;"></div>
+
 
     <!-- 🧾 Order Form -->
     <form id="orderForm">
         <label>Your name:</label>
         <input type="text" id="customerName" placeholder="e.g. Alex" required><br>
+        <label>
+            <input type="checkbox" id="rememberMe">
+            Remember Me
+        </label><br>
+
 
         <label>How many pancakes?</label>
         <input type="number" id="pancakeCount" min="1" max="64" required><br>
