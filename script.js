@@ -8,6 +8,26 @@ const toppingsList = [
   "peanut butter",
 ];
 
+// Daily Special Options
+const flavorsList = [
+  "chocolate",
+  "blueberry",
+  "banana",
+  "cinnamon",
+  "vanilla",
+  "pumpkin spice",
+];
+
+function getDailySpecial() {
+  const today = new Date();
+  const index = (today.getMonth() + 1) * today.getDate(); // e.g. 4 * 19 = 76
+  const flavor = flavorsList[index % flavorsList.length];
+  const topping = toppingsList[index % toppingsList.length];
+  return `${
+    flavor.charAt(0).toUpperCase() + flavor.slice(1)
+  } Pancakes with ${topping}`;
+}
+
 // Escape HTML for safe rendering
 function escapeHTML(str) {
   return str.replace(
@@ -49,6 +69,13 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
   const customerName = escapeHTML(
     document.getElementById("customerName").value.trim()
   );
+  const remember = document.getElementById("rememberMe").checked;
+  if (remember) {
+    localStorage.setItem("rememberedName", customerName);
+  } else {
+    localStorage.removeItem("rememberedName");
+  }
+
   const pancakeCount = parseInt(document.getElementById("pancakeCount").value);
   const flavors = Array.from(
     document.getElementsByClassName("pancakeFlavor")
@@ -63,7 +90,7 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
   const minDrinkOZ = 8;
   const drink = [];
 
-  if (drinkAmount < minDrinkOZ || drinkAmount > maxDrinkOZ) {
+  if (drinkAmount < 8 || drinkAmount > 64) {
     alert(
       `Whoa there! You can't order less than ${minDrinkOZ} or more than ${maxDrinkOZ} ounces of ${drinkType}`
     );
@@ -221,13 +248,14 @@ function resetOrders() {
   }
 }
 
-// 🌗 Theme toggle
+//  Theme toggle
 const themeToggleBtn = document.getElementById("themeToggle");
 
 function applyTheme(theme) {
   document.body.classList.toggle("dark", theme === "dark");
   localStorage.setItem("theme", theme);
-  themeToggleBtn.textContent = theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+  themeToggleBtn.textContent =
+    theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
 }
 
 // Load theme from storage on startup
@@ -269,7 +297,7 @@ musicToggleBtn.addEventListener("click", () => {
 const volumeSlider = document.getElementById("volumeSlider");
 const volumeValue = document.getElementById("volumeValue");
 
-// Load saved volume or default to 1 (15%)
+// Load saved volume or default to 1 (100%)
 const savedVolume = localStorage.getItem("musicVolume");
 music.volume = savedVolume !== null ? parseFloat(savedVolume) : 1;
 volumeSlider.value = Math.round(music.volume * 15);
@@ -282,4 +310,130 @@ volumeSlider.addEventListener("input", () => {
   volumeValue.textContent = volumeSlider.value + "%";
   localStorage.setItem("musicVolume", volume);
 });
+
+// Prefill saved name
+window.addEventListener("DOMContentLoaded", () => {
+  const savedName = localStorage.getItem("rememberedName");
+  if (savedName) {
+    document.getElementById("customerName").value = savedName;
+    document.getElementById("rememberMe").checked = true;
+  }
+
+  // Show daily special
+  const special = getDailySpecial();
+  document.getElementById(
+    "dailySpecial"
+  ).textContent = `🥞 Today's Special: ${special}!`;
+});
+
+// 🧠 Chatbot Waiter
+const chatInput = document.getElementById("chatInput");
+const chatMessages = document.getElementById("chatMessages");
+
+function addChatMessage(sender, text) {
+  const msg = document.createElement("div");
+  msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+  msg.style.marginBottom = "6px";
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+chatInput.addEventListener("keypress", async (e) => {
+  if (e.key === "Enter" && chatInput.value.trim()) {
+    const userText = chatInput.value.trim();
+    addChatMessage("You", userText);
+    chatInput.value = "";
+
+    const botResponse = await getBotReply(userText.toLowerCase());
+    setTimeout(() => addChatMessage("Waiter Bot", botResponse), 400);
+  }
+});
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    addChatMessage("Waiter Bot", "Welcome to Stacks for Stacks! Ask me anything 🍽️");
+  }, 1000);
+});
+
+async function getBotReply(input) {
+  if (input.includes("pancake recipe")) {
+    return await getRecipeBySearch("pancake");
+  }
+  if (input.includes("dessert")) {
+    return await getRecipeByCategory("Dessert");
+  }
+  if (input.includes("surprise") || input.includes("random")) {
+    return await getRandomRecipe();
+  }
+
+  const casualReplies = {
+    hello: "Hi there! Need help with your stack?",
+    hi: "Hello! Pancakes or drinks today?",
+    menu: "We serve pancakes, toppings, drinks & daily specials!",
+    recommend: "Try the banana pancakes with peanut butter 🍌🥜",
+    hours: "We're open 24/7. Pancakes never sleep!",
+    thanks: "You're welcome! Happy stacking 🥞",
+    yes: "What do you need help with?",
+    no: "Alright, bye!",
+    pluh: "https://www.youtube.com/watch?v=7TLbk7f3OOc",
+  };
+
+  for (const key in casualReplies) {
+    if (input.includes(key)) return casualReplies[key];
+  }
+
+  return "I'm not sure, but try asking for a 'pancake recipe', 'dessert', or say 'surprise me'.";
+}
+
+async function getRecipeBySearch(term) {
+  try {
+    const res = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${term}`
+    );
+    const data = await res.json();
+    if (data.meals && data.meals.length > 0) {
+      const meal = data.meals[0];
+      return `🍽️ ${meal.strMeal} — ${meal.strCategory}<br><a href="${
+        meal.strSource || meal.strYoutube
+      }" target="_blank">View Recipe</a>`;
+    } else {
+      return `Sorry, I couldn't find a recipe for "${term}".`;
+    }
+  } catch (err) {
+    return "No way! We can't reach the recipe vault.";
+  }
+}
+
+// API magic 
+async function getRecipeByCategory(category) {
+  try {
+    const res = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+    );
+    const data = await res.json();
+    if (data.meals && data.meals.length > 0) {
+      const randomMeal =
+        data.meals[Math.floor(Math.random() * data.meals.length)];
+      return `🍰 How about: ${randomMeal.strMeal}?<br><a href="https://www.themealdb.com/meal/${randomMeal.idMeal}" target="_blank">View Recipe</a>`;
+    } else {
+      return "No recipes found right now!";
+    }
+  } catch (err) {
+    return "No way! We can't reach the recipe vault";
+  }
+}
+
+// API magic
+async function getRandomRecipe() {
+  try {
+	  const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
+	  const data = await res.json();
+	  const meal = data.meals[0];
+	  return `🎲 Surprise dish: ${meal.strMeal} — ${meal.strCategory}<br><a href="${
+		meal.strSource || meal.strYoutube
+	  }" target="_blank">Check it out</a>`;
+  } catch (err) {
+    return "No way! We can't reach the recipe vault";
+  }
+}
 
