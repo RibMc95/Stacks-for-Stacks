@@ -326,7 +326,7 @@ window.addEventListener("DOMContentLoaded", () => {
   ).textContent = `🥞 Today's Special: ${special}!`;
 });
 
-// 🧠 Chatbot Waiter
+//  Chatbot Waiter
 const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
 
