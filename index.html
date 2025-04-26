@@ -8,23 +8,27 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 
-<!-- Chatbot Waiter -->
-<div id="chatbot">
-    <div id="chatHeader">🧑‍🍳 Chatbot Waiter</div>
+<!-- 🤖 Chatbot Waiter -->
+<div id="chatbot" class="draggable">
+    <div id="chatHeader">
+        🧑‍🍳 Chatbot Waiter
+        <button id="minimizeChat" title="Minimize">_</button>
+    </div>
     <div id="chatMessages"></div>
     <input type="text" id="chatInput" placeholder="Ask me anything..." />
 </div>
 
 
+
 <body>
-    <!--  Logo -->
+    <!-- 🖼️ Logo -->
     <img src="images/Logo.jpg" alt="Logo" width="300" style="margin-right: 20px;">
     <button id="themeToggle">Toggle Light/Dark Mode</button>
     <h1>🥞 Welcome to Stacks For Stacks 🥤</h1>
     <div id="dailySpecial" style="margin-top: 10px; font-size: 16px; font-weight: bold;"></div>
 
 
-    <!--  Order Form -->
+    <!-- 🧾 Order Form -->
     <form id="orderForm">
         <label>Your name:</label>
         <input type="text" id="customerName" placeholder="e.g. Alex" required><br>
@@ -37,10 +41,13 @@
         <label>How many pancakes?</label>
         <input type="number" id="pancakeCount" min="1" max="64" required><br>
 
-        <label>Type of drink:</label>
-        <input type="text" id="drinkType" required><br>
+        <label>Enter your custom drink flavor:</label>
+        <input type="text" id="drinkFlavor" placeholder="e.g. Mango Explosion" required><br>
+        
+        <label>Fizz level:</label>
+        <input type="range" id="fizzLevel" min="0" max="100" value="50">
+        <span id="fizzDisplay">50%</span><br>
 
-        <div id="flavorInputs"></div>
 
         <label>How many ounces of your dink you want (8 - 64)?</label>
         <input type="number" id="drinkAmount" min="1" required><br>
@@ -48,10 +55,10 @@
         <button type="submit">Place Order</button>
     </form>
 
-    <!--  Progress Bar -->
+    <!-- 🧳 Progress Bar -->
     <progress id="drinkProgress" value="0" max="64" style="width: 100%; height: 20px; margin-top: 10px;"></progress>
 
-    <!--  View History Button -->
+    <!-- 📜 View History Button -->
     <button onclick="showOrderHistory()">View Previous Orders</button>
     <button onclick="resetOrders()">Clear Order History</button>
     <button onclick="showStatistics()">View Order Statistics</button>
@@ -59,19 +66,19 @@
 
 
 
-    <!--  Output -->
+    <!-- 📋 Output -->
     <div id="output"></div>
    
 
 
-    <!-- Sample Menu Preview -->
+    <!-- 🖼️ Sample Menu Preview -->
     <div id="sampleImages" style="margin-top: 20px;">
         <h2>Menu Preview</h2>
         <img src="images/Logo.jpg" alt="Stack of pancakes" width="150" style="margin-right: 10px;">
         <img src="images/Drink.png" alt="Glass of drink" width="150" style="margin-right: 10px;">
     </div>
 
-    <!--  Order Confirmation Sound -->
+    <!-- 🔔 Order Confirmation Sound -->
     <audio id="orderSound" src="sounds/ding.mp3" preload="auto"></audio>
     <audio id="themeMusic" src="sounds/ESCP - Neon Metaphor (freetouse.com).mp3" loop preload="auto"></audio>
     <button id="musicToggle">🔇 Toggle Music</button>
@@ -85,10 +92,12 @@
 
     <script src="script.js"></script>
     <footer style="text-align: center; font-size: 12px; margin-top: 40px; color: #555;">
-         Music: <strong>Neon Metaphor</strong> by <a href="https://www.escp.space" target="_blank"
+        🎵 Music: <strong>Neon Metaphor</strong> by <a href="https://www.escp.space" target="_blank"
             rel="noopener noreferrer">ESCP</a> —
         <a href="https://freetouse.com/music" target="_blank" rel="noopener noreferrer">FreeToUse.com</a>
     </footer>
+
+    
 
 </body>
 
