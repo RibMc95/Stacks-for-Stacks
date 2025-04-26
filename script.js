@@ -43,6 +43,15 @@ function escapeHTML(str) {
   );
 }
 
+// fizzy level for drink
+const fizzSlider = document.getElementById("fizzLevel");
+const fizzDisplay = document.getElementById("fizzDisplay");
+
+fizzSlider.addEventListener("input", () => {
+  fizzDisplay.textContent = fizzSlider.value + "%";
+});
+
+
 // Generate pancake flavor input fields and topping selectors
 document.getElementById("pancakeCount").addEventListener("change", () => {
   const count = parseInt(document.getElementById("pancakeCount").value);
@@ -84,7 +93,9 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
     document.getElementsByClassName("pancakeTopping")
   ).map((select) => escapeHTML(select.value));
 
-  const drinkType = escapeHTML(document.getElementById("drinkType").value);
+  const drinkFlavor = escapeHTML(document.getElementById("drinkFlavor").value);
+  const fizzLevel = document.getElementById("fizzLevel").value;
+  const drinkType = `${drinkFlavor} (Fizz: ${fizzLevel}%)`;
   const drinkAmount = parseInt(document.getElementById("drinkAmount").value);
   const maxDrinkOZ = 64;
   const minDrinkOZ = 8;
@@ -351,7 +362,10 @@ chatInput.addEventListener("keypress", async (e) => {
 
 window.addEventListener("load", () => {
   setTimeout(() => {
-    addChatMessage("Waiter Bot", "Welcome to Stacks for Stacks! Ask me anything 🍽️");
+    addChatMessage(
+      "Waiter Bot",
+      "Welcome to Stacks for Stacks! Ask me anything 🍽️"
+    );
   }, 1000);
 });
 
@@ -367,15 +381,18 @@ async function getBotReply(input) {
   }
 
   const casualReplies = {
-    hello: "Hi there! Need help with your stack?",
-    hi: "Hello! Pancakes or drinks today?",
-    menu: "We serve pancakes, toppings, drinks & daily specials!",
-    recommend: "Try the banana pancakes with peanut butter 🍌🥜",
-    hours: "We're open 24/7. Pancakes never sleep!",
-    thanks: "You're welcome! Happy stacking 🥞",
-    yes: "What do you need help with?",
-    no: "Alright, bye!",
-    pluh: "https://www.youtube.com/watch?v=7TLbk7f3OOc",
+    "hello": "Hi there! Need help with your stack?",
+    "hi": "Hello! Pancakes or drinks today?",
+    "menu": "We serve pancakes, toppings, drinks & daily specials!",
+    "recommend": "Try the banana pancakes with peanut butter 🍌🥜",
+    "hours": "We're open 24/7. Pancakes never sleep!",
+    "thanks": "You're welcome! Happy stacking 🥞",
+    "yes": "What do you need help with?",
+    "flavor":"try something like cinnamon or blueberry for starters. Anything else?",
+    "drinks":"You should try some type of juice or soft drink",
+    "pluh": "https://www.youtube.com/watch?v=7TLbk7f3OOc",
+    "waffles": "nah",
+    "french toast": "nah",
   };
 
   for (const key in casualReplies) {
@@ -404,7 +421,7 @@ async function getRecipeBySearch(term) {
   }
 }
 
-// API magic 
+// fetches desert recipes
 async function getRecipeByCategory(category) {
   try {
     const res = await fetch(
@@ -423,17 +440,41 @@ async function getRecipeByCategory(category) {
   }
 }
 
-// API magic
+//fetches random recipes
 async function getRandomRecipe() {
   try {
-	  const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
-	  const data = await res.json();
-	  const meal = data.meals[0];
-	  return `🎲 Surprise dish: ${meal.strMeal} — ${meal.strCategory}<br><a href="${
-		meal.strSource || meal.strYoutube
-	  }" target="_blank">Check it out</a>`;
+    const res = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/random.php"
+    );
+    const data = await res.json();
+    const meal = data.meals[0];
+    return `🎲 Surprise dish: ${meal.strMeal} — ${
+      meal.strCategory
+    }<br><a href="${
+      meal.strSource || meal.strYoutube
+    }" target="_blank">Check it out</a>`;
   } catch (err) {
     return "No way! We can't reach the recipe vault";
   }
 }
+
+//  Minimize toggle
+const chatbotBox = document.getElementById("chatbot");
+const minimizeBtn = document.getElementById("minimizeChat");
+
+minimizeBtn.addEventListener("click", () => {
+  chatbotBox.classList.toggle("minimized");
+  minimizeBtn.textContent = chatbotBox.classList.contains("minimized") ? "🔼" : "_";
+});
+
+//  Drag to move
+let isDragging = false, offsetX = 0, offsetY = 0;
+
+const header = document.getElementById("chatHeader");
+
+header.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  offsetX = e.clientX - chatbotBox.getBoundingClientRect().left;
+  offsetY = e.clientY - chatbotBox.getBoundingClientRect().top;
+});
 
