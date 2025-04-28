@@ -64,6 +64,17 @@
     <button onclick="showStatistics()">View Order Statistics</button>
     <button onclick="showOrdersByName()">View My Orders</button>
 
+    <div id="ingredientBuilder">
+        <h2>🍴 Build Your Pancake!</h2>
+        <div id="ingredients">
+            <!-- Ingredients will be auto-filled here -->
+        </div>
+        <div id="pancakeTarget" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <img src="images/pancake-base.png" alt="Pancake" id="pancakeBase">
+            <div id="addedIngredients"></div>
+        </div>
+    </div>
+
 
 
     <!-- 📋 Output -->
