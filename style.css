@@ -118,3 +118,39 @@ footer {
     display: none;
 }
 
+#ingredientBuilder {
+    margin-top: 30px;
+    padding: 15px;
+    background: #ffecc2;
+    border: 2px solid #d08900;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#ingredients img {
+    width: 50px;
+    margin: 5px;
+    cursor: grab;
+}
+
+#pancakeTarget {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+    background: #fffbe8;
+    border: 2px dashed #c57206;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+#pancakeBase {
+    width: 100%;
+    height: auto;
+}
+
+#addedIngredients img {
+    width: 40px;
+    position: absolute;
+}
+
