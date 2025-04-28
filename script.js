@@ -337,7 +337,7 @@ window.addEventListener("DOMContentLoaded", () => {
   ).textContent = `🥞 Today's Special: ${special}!`;
 });
 
-//  Chatbot Waiter
+// 🧠 Chatbot Waiter
 const chatInput = document.getElementById("chatInput");
 const chatMessages = document.getElementById("chatMessages");
 
@@ -477,4 +477,53 @@ header.addEventListener("mousedown", (e) => {
   offsetX = e.clientX - chatbotBox.getBoundingClientRect().left;
   offsetY = e.clientY - chatbotBox.getBoundingClientRect().top;
 });
+
+// 🍴 Drag and Drop Ingredient Builder
+const toppingsIcons = [
+  { name: "chocolate chips", img: "images/chocolate-chip.png" },
+  { name: "blueberries", img: "images/blueberry.png" },
+  { name: "bananas", img: "images/banana.png" },
+  { name: "whipped cream", img: "images/whip-cream.png" },
+  { name: "maple syrup", img: "images/syrup.png" },
+  { name: "peanut butter", img: "images/peanut.png" },
+];
+
+function buildIngredients() {
+  const container = document.getElementById("ingredients");
+  toppingsIcons.forEach((item) => {
+    const img = document.createElement("img");
+    img.src = item.img;
+    img.alt = item.name;
+    img.title = item.name;
+    img.draggable = true;
+    img.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", item.img);
+    });
+    container.appendChild(img);
+  });
+}
+
+function allowDrop(e) {
+  e.preventDefault();
+}
+
+function drop(e) {
+  e.preventDefault();
+  const imgSrc = e.dataTransfer.getData("text/plain");
+  const img = document.createElement("img");
+  img.src = imgSrc;
+
+  // Calculate position relative to the drop zone
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left - 20; // center image
+  const y = e.clientY - rect.top - 20; // center image
+
+  img.style.left = x + "px";
+  img.style.top = y + "px";
+
+  document.getElementById("addedIngredients").appendChild(img);
+}
+
+// Auto-build ingredient icons when page loads
+window.addEventListener("DOMContentLoaded", buildIngredients);
 
