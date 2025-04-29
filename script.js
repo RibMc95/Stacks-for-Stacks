@@ -72,6 +72,7 @@ document.getElementById("pancakeCount").addEventListener("change", () => {
   }
 });
 
+
 document.getElementById("orderForm").addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -526,4 +527,3 @@ function drop(e) {
 
 // Auto-build ingredient icons when page loads
 window.addEventListener("DOMContentLoaded", buildIngredients);
-
