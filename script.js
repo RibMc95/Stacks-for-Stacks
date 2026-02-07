@@ -23,9 +23,8 @@ function getDailySpecial() {
   const index = (today.getMonth() + 1) * today.getDate(); // e.g. 4 * 19 = 76
   const flavor = flavorsList[index % flavorsList.length];
   const topping = toppingsList[index % toppingsList.length];
-  return `${
-    flavor.charAt(0).toUpperCase() + flavor.slice(1)
-  } Pancakes with ${topping}`;
+  return `${flavor.charAt(0).toUpperCase() + flavor.slice(1)
+    } Pancakes with ${topping}`;
 }
 
 // Escape HTML for safe rendering
@@ -33,13 +32,13 @@ function escapeHTML(str) {
   return str.replace(
     /[&<>'"]/g,
     (tag) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        "'": "&#39;",
-        '"': "&quot;",
-      }[tag])
+    ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "'": "&#39;",
+      '"': "&quot;",
+    }[tag])
   );
 }
 
@@ -162,9 +161,8 @@ function showOrderHistory() {
     const toppingText = order.toppings
       ? ` with toppings: ${order.toppings.join(", ")}`
       : "";
-    html += `<p><strong>Order #${i + 1}</strong> by ${order.name} (${
-      order.timestamp
-    })<br>
+    html += `<p><strong>Order #${i + 1}</strong> by ${order.name} (${order.timestamp
+      })<br>
     Drink: ${order.amount} oz of ${order.drink}<br>
     Pancakes: ${order.pancakes.join(", ")}${toppingText}</p>`;
   });
@@ -288,7 +286,7 @@ const musicToggleBtn = document.getElementById("musicToggle");
 let musicStarted = false;
 function tryStartMusic() {
   if (!musicStarted) {
-    music.play().catch(() => {});
+    music.play().catch(() => { });
     musicStarted = true;
   }
 }
@@ -389,8 +387,8 @@ async function getBotReply(input) {
     "hours": "We're open 24/7. Pancakes never sleep!",
     "thanks": "You're welcome! Happy stacking 🥞",
     "yes": "What do you need help with?",
-    "flavor":"try something like cinnamon or blueberry for starters. Anything else?",
-    "drinks":"You should try some type of juice or soft drink",
+    "flavor": "try something like cinnamon or blueberry for starters. Anything else?",
+    "drinks": "You should try some type of juice or soft drink",
     "pluh": "https://www.youtube.com/watch?v=7TLbk7f3OOc",
     "waffles": "nah",
     "french toast": "nah",
@@ -411,9 +409,8 @@ async function getRecipeBySearch(term) {
     const data = await res.json();
     if (data.meals && data.meals.length > 0) {
       const meal = data.meals[0];
-      return `🍽️ ${meal.strMeal} — ${meal.strCategory}<br><a href="${
-        meal.strSource || meal.strYoutube
-      }" target="_blank">View Recipe</a>`;
+      return `🍽️ ${meal.strMeal} — ${meal.strCategory}<br><a href="${meal.strSource || meal.strYoutube
+        }" target="_blank">View Recipe</a>`;
     } else {
       return `Sorry, I couldn't find a recipe for "${term}".`;
     }
@@ -422,7 +419,7 @@ async function getRecipeBySearch(term) {
   }
 }
 
-// fetches desert recipes
+// Fetches dessert recipes
 async function getRecipeByCategory(category) {
   try {
     const res = await fetch(
@@ -441,7 +438,7 @@ async function getRecipeByCategory(category) {
   }
 }
 
-//fetches random recipes
+// Fetches random recipes
 async function getRandomRecipe() {
   try {
     const res = await fetch(
@@ -449,11 +446,9 @@ async function getRandomRecipe() {
     );
     const data = await res.json();
     const meal = data.meals[0];
-    return `🎲 Surprise dish: ${meal.strMeal} — ${
-      meal.strCategory
-    }<br><a href="${
-      meal.strSource || meal.strYoutube
-    }" target="_blank">Check it out</a>`;
+    return `🎲 Surprise dish: ${meal.strMeal} — ${meal.strCategory
+      }<br><a href="${meal.strSource || meal.strYoutube
+      }" target="_blank">Check it out</a>`;
   } catch (err) {
     return "No way! We can't reach the recipe vault";
   }
